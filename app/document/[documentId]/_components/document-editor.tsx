@@ -26,11 +26,47 @@ import BubbleMenuExtension from "@tiptap/extension-bubble-menu";
 import Underline from "@tiptap/extension-underline";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
-import FontFamily from "@tiptap/extension-font-family";
-import Table from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableHeader from "@tiptap/extension-table-header";
-import TableCell from "@tiptap/extension-table-cell";
+import { Extension } from "@tiptap/core";
+
+// Custom FontFamily extension (the official package is broken with this Tiptap version)
+const FontFamily = Extension.create({
+  name: "fontFamily",
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["textStyle"],
+        attributes: {
+          fontFamily: {
+            default: null,
+            parseHTML: (element) => element.style.fontFamily?.replace(/["/]/g, "") || null,
+            renderHTML: (attributes) => {
+              if (!attributes.fontFamily) return {};
+              return { style: `font-family: ${attributes.fontFamily}` };
+            },
+          },
+        },
+      },
+    ];
+  },
+  addCommands() {
+    return {
+      setFontFamily:
+        (fontFamily: string) =>
+        ({ chain }: { chain: () => any }) => {
+          return chain().setMark("textStyle", { fontFamily }).run();
+        },
+      unsetFontFamily:
+        () =>
+        ({ chain }: { chain: () => any }) => {
+          return chain().setMark("textStyle", { fontFamily: null }).removeEmptyTextStyle().run();
+        },
+    };
+  },
+});
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
 
 import "@liveblocks/react-tiptap/styles.css";
 import { Toolbar } from "./toolbar";

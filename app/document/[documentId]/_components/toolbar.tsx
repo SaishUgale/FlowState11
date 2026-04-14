@@ -92,7 +92,7 @@ const ToolbarButton = ({
 
 const FONT_FAMILIES = [
   { label: "Default (Sans)", value: "Inter, sans-serif" },
-  { label: "Serif", value: "Georgia, serif" },
+  { label: "Serif", value: "'Palatino Linotype', serif" },
   { label: "Monospace", value: "'Courier New', monospace" },
   { label: "Comic Sans", value: "'Comic Sans MS', cursive" },
   { label: "Arial", value: "Arial, sans-serif" },
