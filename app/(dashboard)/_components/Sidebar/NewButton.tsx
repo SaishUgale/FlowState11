@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import Hint from "@/components/ui/hint";
 import { CreateOrganization } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
@@ -19,6 +19,7 @@ export const NewButton = () => {
         </div>
       </DialogTrigger>
       <DialogContent className="max-w-[90%] sm:max-w-[500px] rounded-lg bg-white border-none p-0">
+        <DialogTitle className="sr-only">Add Organization</DialogTitle>
         <CreateOrganization
           appearance={{
             elements: {

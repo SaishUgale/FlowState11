@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { CreateOrganization } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
@@ -16,6 +16,7 @@ const EmptyOrg = () => {
             <Button>Create Organization</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[90%] sm:max-w-[500px] rounded-lg bg-white border-none p-0">
+            <DialogTitle className="sr-only">Create Organization</DialogTitle>
             <CreateOrganization
               appearance={{
                 elements: {

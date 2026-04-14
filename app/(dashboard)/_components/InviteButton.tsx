@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ export const InviteButton = () => {
         </div>
       </DialogTrigger>
       <DialogContent className="p-0 bg-transparent border-none max-w-[880px]">
+        <DialogTitle className="sr-only">Invite Members</DialogTitle>
         <OrganizationProfile routing="hash" />
       </DialogContent>
     </Dialog>
