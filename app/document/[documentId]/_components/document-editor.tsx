@@ -23,12 +23,20 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
 import BubbleMenuExtension from "@tiptap/extension-bubble-menu";
+import Underline from "@tiptap/extension-underline";
+import Subscript from "@tiptap/extension-subscript";
+import Superscript from "@tiptap/extension-superscript";
+import FontFamily from "@tiptap/extension-font-family";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
+import TableCell from "@tiptap/extension-table-cell";
 
 import "@liveblocks/react-tiptap/styles.css";
 import { Toolbar } from "./toolbar";
 
 export const DocumentEditor = ({ documentId }: { documentId: string }) => {
-  const userInfo = useSelf((me) => me.info);
+  const _userInfo = useSelf((me) => me.info);
   const liveblocksExt = useLiveblocksExtension();
   
   const [copied, setCopied] = useState(false);
@@ -58,6 +66,10 @@ export const DocumentEditor = ({ documentId }: { documentId: string }) => {
       BubbleMenuExtension, 
       TextStyle, Color, Highlight.configure({ multicolor: true }), TaskList, TaskItem.configure({ nested: true }),
       Link.configure({ openOnClick: false }), Image, TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Underline, Subscript, Superscript,
+      FontFamily,
+      Table.configure({ resizable: true }),
+      TableRow, TableHeader, TableCell,
     ],
     editorProps: {
       attributes: { class: "focus:outline-none min-h-[calc(100vh-12rem)] h-full w-full" },
