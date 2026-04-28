@@ -22,6 +22,7 @@ interface ActionsProps {
   sideOffset?: number;
   id: string;
   title: string;
+  type?: string;
 }
 
 export const Actions = ({
@@ -30,6 +31,7 @@ export const Actions = ({
   sideOffset,
   id,
   title,
+  type = "board",
 }: ActionsProps) => {
   const router = useRouter(); // Initialize router
   const { onOpen } = useRenameModal();
@@ -37,8 +39,9 @@ export const Actions = ({
   const remove = useMutation(api.board.deleteById);
 
   const onCopyLink = () => {
+    const route = type === "document" ? "document" : type === "uml" ? "uml" : type === "spreadsheet" ? "spreadsheet" : "board";
     navigator.clipboard
-      .writeText(`${window.location.origin}/board/${id}`)
+      .writeText(`${window.location.origin}/${route}/${id}`)
       .then(() => toast.success("Link copied"))
       .catch(() => toast.error("Failed to copy link"));
   };

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
-import { Plus, LayoutTemplate, FileText, ChevronLeft, Loader2, X } from "lucide-react";
+import { Plus, LayoutTemplate, FileText, ChevronLeft, Loader2, X, Network, Table } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ export const NewFileButton = ({
   // State for Popup and Wizard Steps
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<"select" | "name">("select");
-  const [selectedType, setSelectedType] = useState<"board" | "document" | null>(null);
+  const [selectedType, setSelectedType] = useState<"board" | "document" | "uml" | "spreadsheet" | null>(null);
   const [title, setTitle] = useState("");
   
   const popupRef = useRef<HTMLDivElement>(null);
@@ -61,9 +61,9 @@ export const NewFileButton = ({
     setPending(true);
     try {
       const id = await create({ orgId, title: title.trim(), type: selectedType });
-      toast.success(`${selectedType === "board" ? "Board" : "Document"} created`);
+      toast.success(`${selectedType === "board" ? "Board" : selectedType === "document" ? "Document" : selectedType === "uml" ? "UML Diagram" : "Spreadsheet"} created`);
       resetAndClose();
-      router.push(selectedType === "board" ? `/board/${id}` : `/document/${id}`);
+      router.push(selectedType === "board" ? `/board/${id}` : selectedType === "document" ? `/document/${id}` : selectedType === "uml" ? `/uml/${id}` : `/spreadsheet/${id}`);
     } catch {
       toast.error("Failed to create");
     } finally {
@@ -143,6 +143,22 @@ export const NewFileButton = ({
               >
                 <FileText className="h-8 w-8 text-zinc-500 group-hover:text-blue-600" />
                 <span className="text-xs font-medium">Document</span>
+              </button>
+
+              <button
+                onClick={() => { setSelectedType("uml"); setStep("name"); }}
+                className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all group"
+              >
+                <Network className="h-8 w-8 text-zinc-500 group-hover:text-blue-600" />
+                <span className="text-xs font-medium">UML Diagram</span>
+              </button>
+
+              <button
+                onClick={() => { setSelectedType("spreadsheet"); setStep("name"); }}
+                className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all group"
+              >
+                <Table className="h-8 w-8 text-zinc-500 group-hover:text-blue-600" />
+                <span className="text-xs font-medium">Spreadsheet</span>
               </button>
             </div>
           )}

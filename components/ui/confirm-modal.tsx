@@ -2,6 +2,7 @@ import {
   AlertDialog,
   AlertDialogTrigger,
   AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogContent,
   AlertDialogFooter,
@@ -28,7 +29,9 @@ export const ConfirmModal = ({
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent className="bg-white">
-        <AlertDialogHeader>{header}</AlertDialogHeader>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{header}</AlertDialogTitle>
+        </AlertDialogHeader>
         <AlertDialogDescription>{description}</AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

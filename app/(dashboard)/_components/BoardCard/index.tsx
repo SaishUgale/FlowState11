@@ -8,7 +8,7 @@ import { useAuth } from "@clerk/nextjs";
 import { Footer } from "./Footer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Actions } from "@/components/ui/actions";
-import { MoreHorizontal, FileText, LayoutTemplate } from "lucide-react";
+import { MoreHorizontal, FileText, LayoutTemplate, Network, Table } from "lucide-react";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
@@ -58,7 +58,7 @@ const BoardCard = ({
     }
   };
 
-  const href = type === "document" ? `/document/${id}` : `/board/${id}`;
+  const href = type === "document" ? `/document/${id}` : type === "uml" ? `/uml/${id}` : type === "spreadsheet" ? `/spreadsheet/${id}` : `/board/${id}`;
 
   return (
     <Link href={href}>
@@ -69,8 +69,18 @@ const BoardCard = ({
             <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50/50 to-blue-100/50 dark:from-blue-950/30 dark:to-indigo-900/30 transition-all group-hover:scale-110 duration-500">
               <FileText className="h-16 w-16 text-indigo-500/80 dark:text-indigo-400/80 drop-shadow-sm" strokeWidth={1.5} />
             </div>
+          ) : type === "uml" ? (
+            // UML Icon View (Purple Theme)
+            <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-fuchsia-50/50 to-purple-100/50 dark:from-purple-950/30 dark:to-fuchsia-900/30 transition-all group-hover:scale-110 duration-500">
+              <Network className="h-16 w-16 text-purple-500/80 dark:text-purple-400/80 drop-shadow-sm" strokeWidth={1.5} />
+            </div>
+          ) : type === "spreadsheet" ? (
+            // Spreadsheet Icon View (Emerald/Green Theme)
+            <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50/50 to-teal-100/50 dark:from-emerald-950/30 dark:to-teal-900/30 transition-all group-hover:scale-110 duration-500">
+              <Table className="h-16 w-16 text-emerald-500/80 dark:text-emerald-400/80 drop-shadow-sm" strokeWidth={1.5} />
+            </div>
           ) : (
-            // Board Icon View (Amber/Orange Theme) - Image replaced with Icon
+            // Board Icon View (Amber/Orange Theme)
             <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-amber-50/50 to-orange-100/50 dark:from-amber-950/30 dark:to-orange-900/30 transition-all group-hover:scale-110 duration-500">
               <LayoutTemplate className="h-16 w-16 text-amber-600/80 dark:text-amber-500/80 drop-shadow-sm" strokeWidth={1.5} />
             </div>
@@ -78,7 +88,7 @@ const BoardCard = ({
           
           <Overlay />
           
-          <Actions id={id} title={title} side="right">
+          <Actions id={id} title={title} type={type} side="right">
             <button className="absolute z-50 top-1 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <MoreHorizontal className="text-black dark:text-white drop-shadow-md" />
             </button>

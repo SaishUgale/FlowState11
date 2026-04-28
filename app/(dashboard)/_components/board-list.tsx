@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import BoardCard from "./BoardCard";
 import { NewFileButton } from "./new-file-button";
-import { LayoutTemplate, FileText, X } from "lucide-react";
+import { LayoutTemplate, FileText, X, Network, Table } from "lucide-react";
 
 interface BoardListProps {
   orgId: string;
@@ -91,6 +91,8 @@ export const BoardList = ({ orgId, query }: BoardListProps) => {
 
   const boards = data.filter((b: any) => b.type === "board");
   const documents = data.filter((b: any) => b.type === "document");
+  const umls = data.filter((b: any) => b.type === "uml");
+  const spreadsheets = data.filter((b: any) => b.type === "spreadsheet");
 
   return (
     <div className="flex flex-col gap-y-4 pb-10"> {/* Reduced gap-y from 12 to 4 */}
@@ -104,6 +106,8 @@ export const BoardList = ({ orgId, query }: BoardListProps) => {
         {!query.favorites && <NewFileButton orgId={orgId} />}
         <FolderCard label="Documents" icon={FileText} count={documents.length} items={documents} />
         <FolderCard label="Boards" icon={LayoutTemplate} count={boards.length} items={boards} />
+        <FolderCard label="UML Diagrams" icon={Network} count={umls.length} items={umls} />
+        <FolderCard label="Spreadsheets" icon={Table} count={spreadsheets.length} items={spreadsheets} />
       </div>
     </div>
   );

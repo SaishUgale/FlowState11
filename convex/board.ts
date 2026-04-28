@@ -18,7 +18,7 @@ export const create = mutation({
   args: {
     orgId: v.string(),
     title: v.string(),
-    type: v.union(v.literal("board"), v.literal("document")),
+    type: v.union(v.literal("board"), v.literal("document"), v.literal("uml"), v.literal("spreadsheet")),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();

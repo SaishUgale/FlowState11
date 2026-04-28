@@ -2,11 +2,13 @@
 
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useSelf } from "@liveblocks/react";
+import { useSelf } from "@liveblocks/react/suspense";
+import { useHistoryVersions } from "@liveblocks/react";
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import { 
-  Download, FileText, Share2, Check, Volume2, Square, Loader2, Settings2, Mic, MicOff, AlertCircle, Sparkles
+  Download, FileText, Share2, Check, Volume2, Square, Loader2, Settings2, Mic, MicOff, AlertCircle, Sparkles, History, X
 } from "lucide-react";
+import { VersionHistoryButton } from "@/components/VersionHistoryButton";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel
@@ -73,10 +75,12 @@ import { Toolbar } from "./toolbar";
 
 export const DocumentEditor = ({ documentId }: { documentId: string }) => {
   const _userInfo = useSelf((me) => me.info);
+  const isAdmin = _userInfo?.isAdmin === true;
   const liveblocksExt = useLiveblocksExtension();
   
   const [copied, setCopied] = useState(false);
-  
+  const [isGrammarLoading, setIsGrammarLoading] = useState(false);
+
   // --- TTS (Read Aloud) STATE ---
   const [isReading, setIsReading] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -86,9 +90,6 @@ export const DocumentEditor = ({ documentId }: { documentId: string }) => {
   const [isListening, setIsListening] = useState(false);
   const [sttError, setSttError] = useState(false);
 
-  // --- GEMINI (Grammar) STATE ---
-  const [isGrammarLoading, setIsGrammarLoading] = useState(false);
-
   // --- REFS ---
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
@@ -97,7 +98,7 @@ export const DocumentEditor = ({ documentId }: { documentId: string }) => {
     immediatelyRender: false,
     autofocus: true,
     extensions: [
-      StarterKit.configure({ history: true, codeBlock: true, horizontalRule: true }),
+      StarterKit.configure({ history: false, codeBlock: true, horizontalRule: true }),
       liveblocksExt,
       BubbleMenuExtension, 
       TextStyle, Color, Highlight.configure({ multicolor: true }), TaskList, TaskItem.configure({ nested: true }),
@@ -255,6 +256,7 @@ export const DocumentEditor = ({ documentId }: { documentId: string }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+
   const downloadDocument = async (format: "text" | "html" | "pdf") => {
     if (!editor) return;
     if (format === "pdf") {
@@ -336,15 +338,18 @@ export const DocumentEditor = ({ documentId }: { documentId: string }) => {
             size="sm"
             className={`gap-x-2 mr-2 ${isListening ? "animate-pulse" : ""}`}
             onClick={toggleDictation}
+            title="Voice Dictation"
           >
             {sttError ? (
-              <><AlertCircle className="h-4 w-4" /> Error (Retry)</>
+              <><AlertCircle className="h-4 w-4" /></>
             ) : isListening ? (
-              <><Mic className="h-4 w-4 fill-white animate-bounce" /> Listening...</>
+              <><Mic className="h-4 w-4 fill-white animate-bounce" /></>
             ) : (
-              <><MicOff className="h-4 w-4" /> Dictate</>
+              <><MicOff className="h-4 w-4" /></>
             )}
           </Button>
+
+          <VersionHistoryButton roomId={documentId} roomType="document" />
 
           {/* SHARE & EXPORT */}
           <Button variant="default" size="sm" className="gap-x-2 bg-blue-600 hover:bg-blue-700" onClick={onShare}>
@@ -363,9 +368,12 @@ export const DocumentEditor = ({ documentId }: { documentId: string }) => {
       </div>
 
       <Toolbar editor={editor} />
-      <div className="flex-1 w-full overflow-y-auto py-10">
-        <div className="max-w-[850px] mx-auto bg-white p-12 shadow-md border border-slate-200 relative">
-          <EditorContent editor={editor} className="prose prose-slate max-w-none h-full w-full" />
+      
+      <div className="flex-1 w-full overflow-hidden flex flex-row relative">
+        <div className="flex-1 overflow-y-auto py-10 transition-all">
+          <div className="max-w-[850px] mx-auto bg-white p-12 shadow-md border border-slate-200 relative min-h-[calc(100vh-12rem)]">
+             <EditorContent editor={editor} className="prose prose-slate max-w-none h-full w-full" />
+          </div>
         </div>
       </div>
     </div>

@@ -9,20 +9,22 @@ interface RoomProps {
   children: ReactNode;
   roomId: string;
   fallback: NonNullable<ReactNode> | null;
+  initialPresence?: any;
+  initialStorage?: any;
 }
 
-export const Room = ({ children, roomId, fallback }: RoomProps) => {
+export const Room = ({ children, roomId, fallback, initialPresence, initialStorage }: RoomProps) => {
   return (
     <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
       <RoomProvider
         id={roomId}
-        initialPresence={{
+        initialPresence={initialPresence || {
           cursor: null,
           selection: [],
           pencilDraft: null,
           penColor: null,
         }}
-        initialStorage={{
+        initialStorage={initialStorage || {
           layers: new LiveMap<string, LiveObject<Layer>>(),
           layerIds: new LiveList([]),
         }}
